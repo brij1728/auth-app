@@ -3,5 +3,13 @@
   "singleQuote": true,
   "trailingComma": "all",
   "jsxSingleQuote": true,
-  "arrowParens": "avoid"
+  "arrowParens": "avoid",
+  "endOfLine": "auto",
+  "tabWidth": 2,
+  "printWidth": 80,
+  "bracketSpacing": true,
+  "jsxBracketSameLine": false,
+  "useTabs": false,
+  "proseWrap": "preserve",
+  "htmlWhitespaceSensitivity": "css"
 }
