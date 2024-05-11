@@ -1,9 +1,13 @@
+import { AppRoutes } from "./routes"
 
 function App() {
   return (
-    <div className='text-3xl font-bold'>
-     <h1>React App</h1>
-    </div>
+    <>
+      <div className='flex text-xl font-bold items-center justify-center'>
+        <h1>Auth App</h1>
+      </div>
+      <AppRoutes/>
+    </>
 
   )
 }
