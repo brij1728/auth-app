@@ -7,8 +7,7 @@ import createHttpError from 'http-errors';
 import dotenv from 'dotenv';
 import helmet from 'helmet';
 import morgan from 'morgan';
-
-// import router from './routes';
+import router from './routes';
 
 interface HttpError extends Error {
   status?: number; // Optional because not all errors may include a status
@@ -38,7 +37,7 @@ app.get('/test', (req, res) => {
 });
 
 // Routes
-// app.use('/', router);
+app.use('/', router);
 
 // Not found middleware
 app.use((req: Request, res: Response, next: NextFunction) => {
