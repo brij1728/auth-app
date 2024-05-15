@@ -2,11 +2,11 @@ import { Router } from 'express';
 
 const router = Router();
 
-router.get('/users', (req, res) => {
+router.get('/', (req, res) => {
   res.send('Hello users');
 });
 
-router.post('/users', (req, res) => {
+router.post('/', (req, res) => {
   res.send('Hello Users');
 });
 
