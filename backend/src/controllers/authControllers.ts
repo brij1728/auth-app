@@ -47,7 +47,7 @@ export const login = async (req: Request, res: Response) => {
 
     res.cookie('BRIJESH-AUTH', sessionToken, {
       httpOnly: true,
-      secure: true, // Set to true if using HTTPS
+      secure: true,
       domain: 'localhost',
       path: '/',
     });

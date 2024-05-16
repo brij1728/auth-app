@@ -1,12 +1,12 @@
+import { createUser, getAllUsers, getUserById } from '../controllers';
+
 import { Router } from 'express';
-import { getUsers } from '../controllers';
 
 const router = Router();
 
-router.get('/', getUsers);
+router.get('/', getAllUsers);
+router.get('/:id', getUserById);
 
-router.post('/', (req, res) => {
-  res.send('Hello Users');
-});
+router.post('/', createUser);
 
 export default router;
