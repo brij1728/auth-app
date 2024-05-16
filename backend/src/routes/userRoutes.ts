@@ -1,10 +1,9 @@
 import { Router } from 'express';
+import { getUsers } from '../controllers';
 
 const router = Router();
 
-router.get('/', (req, res) => {
-  res.send('Hello users');
-});
+router.get('/', getUsers);
 
 router.post('/', (req, res) => {
   res.send('Hello Users');
