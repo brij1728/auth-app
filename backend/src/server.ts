@@ -1,6 +1,9 @@
 import { connectDB, prisma } from './db';
 
 import app from './app';
+import { validateEnv } from './utils';
+
+validateEnv();
 
 const PORT = process.env.PORT || 3001;
 

@@ -4,6 +4,6 @@ export const validateEnv = () => {
   cleanEnv(process.env, {
     NODE_ENV: str(),
     PORT: port(),
-    DB_URL: str(),
+    DATABASE_URL: str(),
   });
 };
