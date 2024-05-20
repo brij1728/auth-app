@@ -1,8 +1,18 @@
+import { login, signup } from '../controllers';
+
 import { Router } from 'express';
-import { signup } from '../controllers';
 
-const routes = Router();
+const router = Router();
 
-routes.post('/signup', signup);
+// User signup
+router.post('/signup', signup);
 
-export default routes;
+// User login
+router.post('/login', login);
+
+// User logout
+router.post('/logout', (req, res) => {
+  res.send('User logout');
+});
+
+export default router;

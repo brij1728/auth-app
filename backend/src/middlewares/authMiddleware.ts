@@ -3,7 +3,6 @@ import { NextFunction, Request, Response } from 'express';
 import { User } from '../types';
 import { prisma } from '../db';
 
-// Local augmentation of the Express Request type
 interface CustomRequest extends Request {
   user?: User;
 }

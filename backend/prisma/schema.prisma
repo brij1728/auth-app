@@ -8,22 +8,33 @@ datasource db {
 }
 
 model User {
-  id             String        @id @default(auto()) @map("_id") @db.ObjectId
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
   username       String
-  email          String        @unique
-  authentication AuthRecord[]  @relation("UserToAuthRecord")
+  email          String       @unique
+  authentication AuthRecord[] @relation("UserToAuthRecord")
+  posts          Post[]       @relation("UserToPosts")
+
   @@map("users")
 }
 
 model AuthRecord {
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId
-  authType      String
-  userId        String   @db.ObjectId
-  password      String
-  salt          String
-  sessionToken  String   @unique
-  user          User     @relation(fields: [userId], references: [id], name: "UserToAuthRecord", onDelete: Cascade)
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  authType     String
+  userId       String @db.ObjectId
+  password     String
+  salt         String
+  sessionToken String @unique
+  user         User   @relation(fields: [userId], references: [id], name: "UserToAuthRecord", onDelete: Cascade)
+
   @@map("authRecords")
 }
 
+model Post {
+  id      String  @id @default(auto()) @map("_id") @db.ObjectId
+  title   String
+  content String?
+  ownerId String  @db.ObjectId
+  owner   User    @relation(fields: [ownerId], references: [id], name: "UserToPosts")
 
+  @@map("posts")
+}
