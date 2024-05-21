@@ -70,22 +70,32 @@ export const createUser = async (req: Request, res: Response) => {
     return res.status(400).json({ message: 'Username and email are required' });
   }
 
+  // Check for existing user with the same email
+  const existingUser = await prisma.user.findUnique({
+    where: { email },
+  });
+
+  if (existingUser) {
+    return res
+      .status(400)
+      .json({ message: 'A user with this email already exists.' });
+  }
+
   try {
     const newUser = await prisma.user.create({
       data: { username, email },
     });
     return res.status(201).json({ newUser });
-  } catch (error) {
-    if (
-      error instanceof Prisma.PrismaClientKnownRequestError &&
-      error.code === 'P2002'
-    ) {
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error('Create user error:', error.message);
       return res
-        .status(400)
-        .json({ message: 'A user with this email already exists.' });
+        .status(500)
+        .json({ message: 'Internal server error', error: error.message });
+    } else {
+      console.error('Unexpected error:', error);
+      return res.status(500).json({ message: 'Internal server error' });
     }
-    console.error('Create user error:', error);
-    return res.status(500).json({ message: 'Internal server error' });
   }
 };
 
