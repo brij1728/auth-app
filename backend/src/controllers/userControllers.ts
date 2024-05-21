@@ -64,22 +64,26 @@ export const getUserById = async (req: Request, res: Response) => {
 };
 
 export const createUser = async (req: Request, res: Response) => {
-  console.log(req.body);
+  const { username, email } = req.body;
+
+  if (!username || !email) {
+    return res.status(400).json({ message: 'Username and email are required' });
+  }
+
   try {
-    const { username, email } = req.body;
-
-    if (!username || !email) {
-      return res
-        .status(400)
-        .json({ message: 'Username and email are required' });
-    }
-
     const newUser = await prisma.user.create({
       data: { username, email },
     });
-
     return res.status(201).json({ newUser });
   } catch (error) {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === 'P2002'
+    ) {
+      return res
+        .status(400)
+        .json({ message: 'A user with this email already exists.' });
+    }
     console.error('Create user error:', error);
     return res.status(500).json({ message: 'Internal server error' });
   }
