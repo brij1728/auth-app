@@ -34,15 +34,27 @@ export const isOwner = async (
 
     req.user = authRecord.user;
 
-    const postId = req.params.postId;
-    const post = await prisma.post.findUnique({
-      where: { id: postId },
-    });
+    // Determining the type of resource and its ID
+    const resourceId = req.params.id;
+    const resourceType = req.baseUrl.includes('/users') ? 'user' : 'post';
 
-    if (!post || post.ownerId !== req.user.id) {
-      return res.status(403).json({
-        message: 'Forbidden - User is not the owner of the requested resource',
+    if (resourceType === 'post') {
+      const post = await prisma.post.findUnique({
+        where: { id: resourceId },
       });
+
+      if (!post || post.ownerId !== req.user.id) {
+        return res.status(403).json({
+          message:
+            'Forbidden - User is not the owner of the requested resource',
+        });
+      }
+    } else if (resourceType === 'user') {
+      if (resourceId !== req.user.id) {
+        return res.status(403).json({
+          message: 'Forbidden - User is not allowed to modify this user',
+        });
+      }
     }
 
     next();

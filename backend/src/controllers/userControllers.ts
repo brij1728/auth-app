@@ -89,6 +89,8 @@ export const deleteUser = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
+    console.log('Received ID:', id);
+
     if (!ObjectId.isValid(id)) {
       return res.status(400).json({ message: 'Invalid user ID format' });
     }
@@ -119,6 +121,8 @@ export const updateUser = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { username, email } = req.body;
+    console.log('Received ID:', id);
+    console.log('Received username:', username);
 
     if (!ObjectId.isValid(id)) {
       return res.status(400).json({ message: 'Invalid user ID format' });
