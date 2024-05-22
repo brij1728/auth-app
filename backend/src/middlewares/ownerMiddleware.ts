@@ -12,49 +12,37 @@ export const isOwner = async (
   res: Response,
   next: NextFunction,
 ) => {
-  try {
-    const sessionToken = req.cookies['BRIJESH-AUTH'];
-    if (!sessionToken) {
-      return res
-        .status(401)
-        .json({ message: 'Unauthorized - No session token provided' });
-    }
+  const sessionToken = req.cookies['BRIJESH-AUTH'];
+  if (!sessionToken) {
+    return res
+      .status(401)
+      .json({ message: 'Unauthorized - No session token provided' });
+  }
 
+  try {
     const authRecord = await prisma.authRecord.findUnique({
       where: { sessionToken },
       include: { user: { include: { authentication: true } } },
     });
 
     if (!authRecord || !authRecord.user) {
-      return res.status(401).json({
-        message:
-          'Unauthorized - Session token is invalid or user does not exist',
-      });
+      return res
+        .status(401)
+        .json({ message: 'Unauthorized - Invalid session token' });
     }
 
     req.user = authRecord.user;
-
-    // Determining the type of resource and its ID
     const resourceId = req.params.id;
-    const resourceType = req.baseUrl.includes('/users') ? 'user' : 'post';
+    const userId = req.user.id.toString(); // Ensure the ID is a string
 
-    if (resourceType === 'post') {
-      const post = await prisma.post.findUnique({
-        where: { id: resourceId },
+    console.log(
+      `User ID from token: ${userId}, User ID from params: ${resourceId}`,
+    );
+
+    if (resourceId !== userId) {
+      return res.status(403).json({
+        message: 'Forbidden - You can only modify your own details',
       });
-
-      if (!post || post.ownerId !== req.user.id) {
-        return res.status(403).json({
-          message:
-            'Forbidden - User is not the owner of the requested resource',
-        });
-      }
-    } else if (resourceType === 'user') {
-      if (resourceId !== req.user.id) {
-        return res.status(403).json({
-          message: 'Forbidden - User is not allowed to modify this user',
-        });
-      }
     }
 
     next();
