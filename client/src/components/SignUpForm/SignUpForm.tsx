@@ -33,6 +33,7 @@ export const SignUpForm = () => {
     message: '',
   });
   const debouncedPassword = useDebounce(password, 500);
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     if (debouncedPassword && debouncedPassword.length >= 8) {
@@ -73,7 +74,7 @@ export const SignUpForm = () => {
             component={InputField}
             name='password'
             label='Password'
-            type='password'
+            type={showPassword ? 'text' : 'password'}
             placeholder='Enter your password'
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               const { value } = e.target;
@@ -89,6 +90,19 @@ export const SignUpForm = () => {
                   : ''
             }
           />
+          <div className='flex items-center'>
+            <input
+              id='show-password'
+              type='checkbox'
+              className='mr-2'
+              checked={showPassword}
+              onChange={() => setShowPassword(!showPassword)}
+            />
+            <label htmlFor='show-password' className='text-sm text-secondary'>
+              Show Password
+            </label>
+          </div>
+
           <button
             type='submit'
             className='w-full rounded-md bg-btn px-4 py-2 text-sm font-medium text-primary shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-btn focus:ring-offset-2'
