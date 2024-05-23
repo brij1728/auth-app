@@ -46,7 +46,7 @@ export const InputField: React.FC<InputFieldProps> = ({
           {error}
         </p>
       )}
-      {extraFeedback && (
+      {!error && extraFeedback && (
         <p className='mt-1 text-sm text-blue-600'>{extraFeedback}</p>
       )}
     </div>

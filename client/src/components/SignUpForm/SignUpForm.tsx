@@ -10,12 +10,18 @@ import { useDebounce } from '../../hooks';
 
 // Validation schema using Yup
 const SignUpSchema = Yup.object().shape({
-  name: Yup.string().required('Required'),
-  username: Yup.string().required('Required'),
+  name: Yup.string()
+    .min(2, 'Too Short!')
+    .max(50, 'Too Long!')
+    .required('Required'),
+  username: Yup.string()
+    .min(2, 'Too Short!')
+    .max(50, 'Too Long!')
+    .required('Required'),
   password: Yup.string()
     .min(
       8,
-      'Password must be at least 8 characters, include numbers, uppercase, lowercase, and special characters',
+      'Password must be at least 8 characters and include numbers, uppercase, lowercase, and special characters.',
     )
     .required('Password is required'),
 });
@@ -29,10 +35,12 @@ export const SignUpForm = () => {
   const debouncedPassword = useDebounce(password, 500);
 
   useEffect(() => {
-    if (debouncedPassword) {
+    if (debouncedPassword && debouncedPassword.length >= 8) {
       const feedback = getPasswordFeedback(debouncedPassword);
       console.log('Password:', debouncedPassword, 'Feedback:', feedback);
       setPasswordFeedback(feedback);
+    } else {
+      setPasswordFeedback({ strength: '', message: '' });
     }
   }, [debouncedPassword]);
 
@@ -45,7 +53,7 @@ export const SignUpForm = () => {
         setSubmitting(false);
       }}
     >
-      {({ setFieldValue, handleSubmit }) => (
+      {({ setFieldValue, handleSubmit, errors, touched }) => (
         <Form className='space-y-4' onSubmit={handleSubmit}>
           <Field
             component={InputField}
@@ -73,7 +81,13 @@ export const SignUpForm = () => {
               setFieldValue('password', value);
               setPassword(value);
             }}
-            extraFeedback={`Strength: ${passwordFeedback.strength} - ${passwordFeedback.message}`}
+            extraFeedback={
+              touched.password && errors.password
+                ? ''
+                : password.length >= 8
+                  ? `Strength: ${passwordFeedback.strength} - ${passwordFeedback.message}`
+                  : ''
+            }
           />
           <button
             type='submit'
