@@ -1,3 +1,5 @@
+import { SignIn } from '../../components';
+
 export const SignInPage = () => {
-  return <div>SignIn</div>;
+  return <SignIn />;
 };
