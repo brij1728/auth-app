@@ -4,3 +4,4 @@ export * from './Home';
 export * from './About';
 export * from './NotFound';
 export * from './Profile';
+export * from './ForgotPasswordPage';

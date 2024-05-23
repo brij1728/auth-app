@@ -1,5 +1,6 @@
 import {
   About,
+  ForgotPasswordPage,
   Home,
   NotFound,
   Profile,
@@ -22,6 +23,7 @@ export const AppRoutes = () => {
           <Route path='/about' element={<About />} />
           <Route path='/profile' element={<Profile />} />
           <Route path='*' element={<NotFound />} />
+          <Route path='/forgot-password' element={<ForgotPasswordPage />} />
         </Routes>
       </BrowserRouter>
     </>
