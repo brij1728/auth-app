@@ -20,7 +20,9 @@ export const InputField: React.FC<InputFieldProps> = ({
   className,
   extraFeedback,
 }) => {
-  const inputClasses = `mt-1 w-full rounded-md border border-secondary bg-primary px-3 py-2 text-secondary shadow-sm focus:border-transparent focus:outline-none focus:ring-2 focus:ring-btn ${className || ''}`;
+  const inputClasses = `mt-1 w-full rounded-md border border-secondary bg-primary px-3 py-2 text-secondary shadow-sm focus:border-transparent focus:outline-none focus:ring-2 focus:ring-btn ${
+    className || ''
+  }`;
 
   const errorMessage =
     touched[field.name] && errors[field.name] ? errors[field.name] : undefined;
