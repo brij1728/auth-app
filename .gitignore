@@ -28,3 +28,15 @@ dist-ssr
 .env.test.local
 .env.production.local
 .env
+
+# Node modules
+/client/node_modules/
+/backend/node_modules/
+
+# Environment files
+/client/.env
+/backend/.env
+
+# Build outputs
+/client/build/
+/backend/build/
