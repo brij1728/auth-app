@@ -9,6 +9,7 @@ interface InputFieldProps extends FieldProps {
   className?: string;
   extraFeedback?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  autocomplete?: string;
 }
 
 export const InputField: React.FC<InputFieldProps> = ({
@@ -21,6 +22,7 @@ export const InputField: React.FC<InputFieldProps> = ({
   className,
   extraFeedback,
   onChange,
+  autocomplete,
 }) => {
   const inputClasses = `mt-1 w-full rounded-md border border-secondary bg-primary px-3 py-2 text-secondary shadow-sm focus:border-transparent focus:outline-none focus:ring-2 focus:ring-btn ${className || ''}`;
 
@@ -47,6 +49,7 @@ export const InputField: React.FC<InputFieldProps> = ({
         placeholder={placeholder}
         className={inputClasses}
         onChange={handleInputChange}
+        autoComplete={autocomplete}
         aria-describedby={error ? `${id}-error` : undefined}
       />
       {error && (

@@ -36,6 +36,7 @@ export const SignInForm = () => {
             label='Username'
             type='text'
             placeholder='Enter your username'
+            autocomplete='username'
           />
           <Field
             component={InputField}
@@ -44,6 +45,7 @@ export const SignInForm = () => {
             label='Password'
             type={showPassword ? 'text' : 'password'}
             placeholder='Enter your password'
+            autocomplete='current-password'
           />
           <div className='flex items-center'>
             <input

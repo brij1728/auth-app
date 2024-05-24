@@ -69,6 +69,7 @@ export const SignUpForm = () => {
             label='Username'
             type='text'
             placeholder='Enter your username'
+            autocomplete='username'
           />
           <Field
             component={InputField}
@@ -76,6 +77,7 @@ export const SignUpForm = () => {
             label='Password'
             type={showPassword ? 'text' : 'password'}
             placeholder='Enter your password'
+            autocomplete='new-password'
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               const { value } = e.target;
               setFieldValue('password', value);
