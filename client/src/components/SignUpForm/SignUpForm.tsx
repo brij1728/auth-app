@@ -28,17 +28,17 @@ const SignUpSchema = Yup.object().shape({
 
 export const SignUpForm = () => {
   const [password, setPassword] = useState('');
+  const debouncedPassword = useDebounce(password, 500);
   const [passwordFeedback, setPasswordFeedback] = useState({
     strength: '',
     message: '',
   });
-  const debouncedPassword = useDebounce(password, 500);
   const [showPassword, setShowPassword] = useState(false);
 
+  // Check password strength
   useEffect(() => {
     if (debouncedPassword && debouncedPassword.length >= 8) {
       const feedback = getPasswordFeedback(debouncedPassword);
-      console.log('Password:', debouncedPassword, 'Feedback:', feedback);
       setPasswordFeedback(feedback);
     } else {
       setPasswordFeedback({ strength: '', message: '' });
@@ -54,8 +54,8 @@ export const SignUpForm = () => {
         setSubmitting(false);
       }}
     >
-      {({ setFieldValue, handleSubmit, errors, touched }) => (
-        <Form className='space-y-4' onSubmit={handleSubmit}>
+      {({ errors, touched, setFieldValue }) => (
+        <Form className='space-y-4'>
           <Field
             component={InputField}
             name='name'
@@ -78,7 +78,6 @@ export const SignUpForm = () => {
             placeholder='Enter your password'
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               const { value } = e.target;
-              console.log('Password onChange:', value);
               setFieldValue('password', value);
               setPassword(value);
             }}
@@ -102,7 +101,6 @@ export const SignUpForm = () => {
               Show Password
             </label>
           </div>
-
           <button
             type='submit'
             className='w-full rounded-md bg-btn px-4 py-2 text-sm font-medium text-primary shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-btn focus:ring-offset-2'

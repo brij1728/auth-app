@@ -8,6 +8,7 @@ interface InputFieldProps extends FieldProps {
   placeholder: string;
   className?: string;
   extraFeedback?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const InputField: React.FC<InputFieldProps> = ({
@@ -19,16 +20,20 @@ export const InputField: React.FC<InputFieldProps> = ({
   placeholder,
   className,
   extraFeedback,
+  onChange,
 }) => {
-  const inputClasses = `mt-1 w-full rounded-md border border-secondary bg-primary px-3 py-2 text-secondary shadow-sm focus:border-transparent focus:outline-none focus:ring-2 focus:ring-btn ${
-    className || ''
-  }`;
+  const inputClasses = `mt-1 w-full rounded-md border border-secondary bg-primary px-3 py-2 text-secondary shadow-sm focus:border-transparent focus:outline-none focus:ring-2 focus:ring-btn ${className || ''}`;
 
   const errorMessage =
     touched[field.name] && errors[field.name] ? errors[field.name] : undefined;
   const error = typeof errorMessage === 'string' ? errorMessage : undefined;
 
-  console.log('Rendering InputField with extraFeedback:', extraFeedback);
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    field.onChange(e);
+    if (onChange) {
+      onChange(e);
+    }
+  };
 
   return (
     <div>
@@ -41,6 +46,7 @@ export const InputField: React.FC<InputFieldProps> = ({
         id={id}
         placeholder={placeholder}
         className={inputClasses}
+        onChange={handleInputChange}
         aria-describedby={error ? `${id}-error` : undefined}
       />
       {error && (
