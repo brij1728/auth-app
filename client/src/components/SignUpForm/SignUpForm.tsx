@@ -1,14 +1,22 @@
 import * as Yup from 'yup';
 
-import { Field, Form, Formik } from 'formik';
+import { Field, Form, Formik, FormikHelpers } from 'formik';
 import React, { useEffect, useState } from 'react';
 
 import { InputField } from '../InputField';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 import { getPasswordFeedback } from '../../utils';
+import { signup } from '../../api/authService';
 import { useDebounce } from '../../hooks';
 
-// Validation schema using Yup
+interface SignupFormValues {
+  name: string;
+  username: string;
+  email: string;
+  password: string;
+}
+
 const SignUpSchema = Yup.object().shape({
   name: Yup.string()
     .min(2, 'Too Short!')
@@ -18,6 +26,7 @@ const SignUpSchema = Yup.object().shape({
     .min(2, 'Too Short!')
     .max(50, 'Too Long!')
     .required('Required'),
+  email: Yup.string().email('Invalid email').required('Required'),
   password: Yup.string()
     .min(
       8,
@@ -25,6 +34,26 @@ const SignUpSchema = Yup.object().shape({
     )
     .required('Password is required'),
 });
+
+const handleSignupSubmit = async (
+  values: SignupFormValues,
+  { setSubmitting, setErrors, resetForm }: FormikHelpers<SignupFormValues>,
+) => {
+  try {
+    await signup(values);
+    alert('Signup successful!');
+    resetForm();
+  } catch (error: unknown) {
+    console.error('Signup error:', error);
+    if (axios.isAxiosError(error) && error.response) {
+      setErrors({ password: error.response.data.message });
+    } else {
+      setErrors({ password: 'Network error or server is down.' });
+    }
+  } finally {
+    setSubmitting(false);
+  }
+};
 
 export const SignUpForm = () => {
   const [password, setPassword] = useState('');
@@ -35,7 +64,6 @@ export const SignUpForm = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
 
-  // Check password strength
   useEffect(() => {
     if (debouncedPassword && debouncedPassword.length >= 8) {
       const feedback = getPasswordFeedback(debouncedPassword);
@@ -47,14 +75,11 @@ export const SignUpForm = () => {
 
   return (
     <Formik
-      initialValues={{ name: '', username: '', password: '' }}
+      initialValues={{ name: '', username: '', email: '', password: '' }}
       validationSchema={SignUpSchema}
-      onSubmit={(values, { setSubmitting }) => {
-        console.log('Final Submission Values:', values);
-        setSubmitting(false);
-      }}
+      onSubmit={handleSignupSubmit}
     >
-      {({ errors, touched, setFieldValue }) => (
+      {({ errors, touched, setFieldValue, isSubmitting }) => (
         <Form className='space-y-4'>
           <Field
             component={InputField}
@@ -62,6 +87,7 @@ export const SignUpForm = () => {
             label='Name'
             type='text'
             placeholder='Enter your name'
+            autoComplete='name'
           />
           <Field
             component={InputField}
@@ -69,7 +95,15 @@ export const SignUpForm = () => {
             label='Username'
             type='text'
             placeholder='Enter your username'
-            autocomplete='username'
+            autoComplete='username'
+          />
+          <Field
+            component={InputField}
+            name='email'
+            label='Email'
+            type='email'
+            placeholder='Enter your email'
+            autoComplete='email'
           />
           <Field
             component={InputField}
@@ -77,7 +111,7 @@ export const SignUpForm = () => {
             label='Password'
             type={showPassword ? 'text' : 'password'}
             placeholder='Enter your password'
-            autocomplete='new-password'
+            autoComplete='new-password'
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               const { value } = e.target;
               setFieldValue('password', value);
@@ -105,6 +139,7 @@ export const SignUpForm = () => {
           </div>
           <button
             type='submit'
+            disabled={isSubmitting}
             className='w-full rounded-md bg-btn px-4 py-2 text-sm font-medium text-primary shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-btn focus:ring-offset-2'
           >
             Sign Up
